@@ -14,10 +14,10 @@
             <!-- Registration Card -->
             <div class="bg-white rounded-2xl shadow-xl p-8 space-y-6">
                 <form method="POST" action="{{ route('register') }}" class="space-y-6">
-                    @csrf
+        @csrf
 
-                    <!-- Name -->
-                    <div>
+        <!-- Name -->
+        <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                             Full Name
                         </label>
@@ -39,10 +39,10 @@
                                 placeholder="John Doe"
                             />
                         </div>
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                    </div>
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        </div>
 
-                    <!-- Email Address -->
+        <!-- Email Address -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                             Email Address
@@ -64,10 +64,10 @@
                                 placeholder="you@example.com"
                             />
                         </div>
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                    </div>
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
 
-                    <!-- Password -->
+        <!-- Password -->
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                             Password
@@ -81,18 +81,18 @@
                             <input 
                                 id="password" 
                                 name="password" 
-                                type="password" 
+                            type="password"
                                 required 
                                 autocomplete="new-password"
                                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out @error('password') border-red-500 @enderror"
                                 placeholder="Create a password"
                             />
                         </div>
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         <p class="mt-1 text-xs text-gray-500">Must be at least 8 characters</p>
-                    </div>
+        </div>
 
-                    <!-- Confirm Password -->
+        <!-- Confirm Password -->
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
                             Confirm Password
@@ -106,15 +106,15 @@
                             <input 
                                 id="password_confirmation" 
                                 name="password_confirmation" 
-                                type="password" 
+                            type="password"
                                 required 
                                 autocomplete="new-password"
                                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out @error('password_confirmation') border-red-500 @enderror"
                                 placeholder="Confirm your password"
                             />
                         </div>
-                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                    </div>
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
 
                     <!-- Submit Button -->
                     <div>

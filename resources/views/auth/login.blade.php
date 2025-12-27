@@ -11,16 +11,16 @@
                 </p>
             </div>
 
-            <!-- Session Status -->
-            <x-auth-session-status class="mb-4" :status="session('status')" />
+    <!-- Session Status -->
+    <x-auth-session-status class="mb-4" :status="session('status')" />
 
             <!-- Login Card -->
             <div class="bg-white rounded-2xl shadow-xl p-8 space-y-6">
                 <form method="POST" action="{{ route('login') }}" class="space-y-6">
-                    @csrf
+        @csrf
 
-                    <!-- Email Address -->
-                    <div>
+        <!-- Email Address -->
+        <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                             Email Address
                         </label>
@@ -42,10 +42,10 @@
                                 placeholder="you@example.com"
                             />
                         </div>
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                    </div>
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
 
-                    <!-- Password -->
+        <!-- Password -->
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                             Password
@@ -59,15 +59,15 @@
                             <input 
                                 id="password" 
                                 name="password" 
-                                type="password" 
+                            type="password"
                                 required 
                                 autocomplete="current-password"
                                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out @error('password') border-red-500 @enderror"
                                 placeholder="Enter your password"
                             />
                         </div>
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                    </div>
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
 
                     <!-- Remember Me & Forgot Password -->
                     <div class="flex items-center justify-between">
@@ -80,17 +80,17 @@
                             />
                             <label for="remember_me" class="ml-2 block text-sm text-gray-700">
                                 Remember me
-                            </label>
-                        </div>
+            </label>
+        </div>
 
-                        @if (Route::has('password.request'))
+            @if (Route::has('password.request'))
                             <a 
                                 href="{{ route('password.request') }}" 
                                 class="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition duration-150 ease-in-out"
                             >
                                 Forgot password?
-                            </a>
-                        @endif
+                </a>
+            @endif
                     </div>
 
                     <!-- Submit Button -->
