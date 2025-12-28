@@ -19,6 +19,11 @@ Route::middleware('auth')->group(function () {
 
     // Event routes (protected by auth middleware)
     Route::resource('events', \App\Http\Controllers\EventController::class);
+
+    // XML Export/Import routes
+    Route::get('/events-export', [\App\Http\Controllers\EventController::class, 'export'])->name('events.export');
+    Route::get('/events-import', [\App\Http\Controllers\EventController::class, 'import'])->name('events.import');
+    Route::post('/events-import', [\App\Http\Controllers\EventController::class, 'processImport'])->name('events.process-import');
 });
 
 

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EventCreatedMail;
 use App\Mail\EventUpdatedMail;
+use App\Services\XmlEventService;
 
 class EventController extends Controller
 {
@@ -66,8 +67,13 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
+        // Find the event by ID or return 404 if not found
         $event = Event::findOrFail($id);
+
+        // Check if user is authorized to view this event (policy check)
         $this->authorize('view', $event);
+
+        // Return the show view with the event data
         return view('events.show', compact('event'));
     }
 
@@ -136,5 +142,67 @@ class EventController extends Controller
         // Redirect to the events list with success message
         return redirect()->route('events.index')
             ->with('success', 'Event deleted successfully!');
+    }
+
+    /**
+     * Export user's events to XML.
+     */
+    public function export(XmlEventService $xmlService)
+    {
+        // Get all events for the current user
+        $events = auth()->user()->events;
+
+        // Generate XML
+        $xml = $xmlService->exportToXml($events);
+
+        // Return as downloadable file
+        return response($xml, 200, [
+            'Content-Type' => 'application/xml',
+            'Content-Disposition' => 'attachment; filename="my-events-' . date('Y-m-d') . '.xml"',
+        ]);
+    }
+
+    /**
+     * Show the import form.
+     */
+    public function import()
+    {
+        return view('events.import');
+    }
+
+    /**
+     * Process the XML import.
+     */
+    public function processImport(Request $request, XmlEventService $xmlService)
+    {
+        $request->validate([
+            'xml_file' => 'required|file|mimes:xml|max:2048',
+        ]);
+
+        try {
+            // Read the uploaded file
+            $xmlContent = file_get_contents($request->file('xml_file')->getRealPath());
+
+            // Validate XML structure
+            if (!$xmlService->validateXmlStructure($xmlContent)) {
+                return back()->withErrors(['xml_file' => 'Invalid XML structure. Please check the format.']);
+            }
+
+            // Import events
+            $result = $xmlService->importFromXml($xmlContent, auth()->id());
+
+            $message = "Successfully imported {$result['success']} event(s).";
+
+            if (!empty($result['errors'])) {
+                $message .= " " . count($result['errors']) . " error(s) occurred.";
+            }
+
+            return redirect()->route('events.index')
+                ->with('success', $message)
+                ->with('import_errors', $result['errors']);
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['xml_file' => $e->getMessage()]);
+        }
     }
 }
