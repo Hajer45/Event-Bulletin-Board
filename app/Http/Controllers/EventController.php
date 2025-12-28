@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EventCreatedMail;
+use App\Mail\EventUpdatedMail;
 
 class EventController extends Controller
 {
@@ -49,6 +52,9 @@ class EventController extends Controller
 
         // Create the event (automatically sets user_id via relationship)
         $event = $request->user()->events()->create($validated);
+
+        // Send email confirmation
+        Mail::to($request->user())->send(new EventCreatedMail($event));
 
         // Redirect to the event detail page with success message
         return redirect()->route('events.show', $event)
@@ -104,6 +110,9 @@ class EventController extends Controller
 
         // Update the event with validated data
         $event->update($validated);
+
+        // Send email notification
+        Mail::to($request->user())->send(new EventUpdatedMail($event));
 
         // Redirect to the event detail page with success message
         return redirect()->route('events.show', $event)
