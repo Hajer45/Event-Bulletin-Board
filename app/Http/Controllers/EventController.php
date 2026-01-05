@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\EventCreatedMail;
 use App\Mail\EventUpdatedMail;
 use App\Services\XmlEventService;
+use App\Events\EventCreated;
+use App\Events\EventUpdated;
+use App\Events\EventDeleted;
 
 class EventController extends Controller
 {
@@ -56,6 +59,9 @@ class EventController extends Controller
 
         // Send email confirmation
         Mail::to($request->user())->send(new EventCreatedMail($event));
+
+        // Broadcast event creation
+        broadcast(new EventCreated($event));
 
         // Redirect to the event detail page with success message
         return redirect()->route('events.show', $event)
@@ -120,6 +126,9 @@ class EventController extends Controller
         // Send email notification
         Mail::to($request->user())->send(new EventUpdatedMail($event));
 
+        // Broadcast event update
+        broadcast(new EventUpdated($event));
+
         // Redirect to the event detail page with success message
         return redirect()->route('events.show', $event)
             ->with('success', 'Event updated successfully!');
@@ -136,8 +145,15 @@ class EventController extends Controller
         // Check if user is authorized to delete this event
         $this->authorize('delete', $event);
 
+        // Store event info before deletion
+        $eventId = $event->id;
+        $eventTitle = $event->title;
+
         // Delete the event from the database
         $event->delete();
+
+        // Broadcast event deletion
+        broadcast(new EventDeleted($eventId, $eventTitle));
 
         // Redirect to the events list with success message
         return redirect()->route('events.index')
